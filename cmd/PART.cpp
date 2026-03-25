@@ -23,7 +23,7 @@ void Command::part()
         throw (Command::InvalidChannel());
     }
     it->removeMember(_target);
-    _target->setChannel(Channel());
+    _target->setChannel(NULL);
     if (it->getClientCount() <= 0)
     {
         channels->erase(it);

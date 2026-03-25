@@ -207,13 +207,13 @@ void Server::newClientData(int fd)
         else if (client->getWrite())
         {
             buffer[bytes] = '\0';
-            std::cout << "Client <" << client->getFd() << ">: " << newBuffer << "\n";
-            if (!client->getChannel().getName().empty())
-            {
-                send(fd, "<#", 2, 0);
-                send(fd, client->getChannel().getName().c_str(), sizeof(client->getChannel().getName().c_str()), 0);
-                send(fd, ">: ", 3, 0);
-            }
+            client->getChannel().sendMessage(newBuffer, *client);
+            //if (!client->getChannel().getName().empty())
+            //{
+            //    send(fd, "<#", 2, 0);
+            //    send(fd, client->getChannel().getName().c_str(), sizeof(client->getChannel().getName().c_str()), 0);
+            //    send(fd, "> ", 2, 0);
+            //}
         }
         else
         {

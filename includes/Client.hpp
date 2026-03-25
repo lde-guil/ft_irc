@@ -22,7 +22,7 @@ class Client
         std::string _ipAddress;
         std::string _username;
         std::string _nickname;
-        Channel _currentChannel;
+        Channel *_currentChannel;
     
     public:
         Client(void);
@@ -42,7 +42,7 @@ class Client
         void setIpAddress(std::string ipAddress);
         void setUsername(std::string username);
         void setNickname(std::string username);
-        void setChannel(Channel newChannel);
+        void setChannel(Channel *newChannel);
         void logIn(void);
         void checkAuth(void);
 };

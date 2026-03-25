@@ -1,6 +1,8 @@
 #include "../includes/Channel.hpp"
+#include "../includes/Client.hpp"
 #include <algorithm>
 #include <iostream>
+#include <set>
 
 Channel::Channel(): _name(""), _topic(""), _inviteOnly(0), _secured(0), _connectedCount(0) {}
 
@@ -42,7 +44,6 @@ void Channel::removeMember(Client *client)
     {
         this->_connectedClients.erase(i);
         this->_connectedCount--;
-        std::cout << "removed client, Client count: " << this->_connectedCount << std::endl;
     }
     std::vector<Client *>::iterator op;
     op = std::find(this->_ops.begin(), this->_ops.end(), client);
@@ -50,7 +51,6 @@ void Channel::removeMember(Client *client)
     {
         this->_ops.erase(op);
         this->_connectedCount--;
-        std::cout << "removed operator, Client count: " << this->_connectedCount << std::endl;
     }
 }
 
@@ -63,4 +63,27 @@ int Channel::isMember(Client *client) const
         return (1);
     }
     return (0);
+}
+
+void Channel::sendMessage(std::string mess, Client author)
+{
+    std::set<Client*> list;
+    for (std::vector<Client*>::iterator it = _connectedClients.begin(); it != _connectedClients.end(); ++it)
+    {
+        list.insert(*it);
+    }
+    for (std::vector<Client*>::iterator it = _ops.begin(); it != _ops.end(); ++it)
+    {
+        list.insert(*it);
+    }
+    for (std::set<Client*>::iterator it = list.begin(); it != list.end(); ++it)
+    {
+        send((*it)->getFd(), "<#", 2, 0);
+        send((*it)->getFd(), this->getName().c_str(), sizeof(this->getName().c_str()), 0);
+        send((*it)->getFd(), " @", 2, 0);
+        send((*it)->getFd(), author.getUsername().c_str(), sizeof(author.getUsername().c_str()), 0);
+        send((*it)->getFd(), ">: ", 3, 0);
+        send((*it)->getFd(), mess.c_str(), mess.size(), 0);
+        send((*it)->getFd(), "\n", 1, 0);
+    }
 }

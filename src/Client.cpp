@@ -8,12 +8,14 @@ Client::Client(void)
 	this->_fd = -1;
     this->_login = 0;
     this->_write = 0;
+    this->_currentChannel = NULL;
 }
 
 Client::Client(int fd, std::string username, std::string nickname):_fd(fd), _username(username), _nickname(nickname)
 {
     this->_login = 0;
     this->_write = 0;
+    this->_currentChannel = NULL;
 }
 
 Client::~Client(void) {}
@@ -44,7 +46,13 @@ std::string Client::getUsername(void) {return (this->_username);}
 
 int Client::getWrite(void) {return (this->_write);}
 
-Channel Client::getChannel(void) {return (this->_currentChannel);}
+Channel Client::getChannel(void) 
+{
+    if (this->_currentChannel)
+        return (*this->_currentChannel);
+    else
+        return (Channel());
+}
 
 void Client::setFd(int fd) {this->_fd = fd;}
 
@@ -54,7 +62,7 @@ void Client::setUsername(std::string username) {this->_username = username;}
 
 void Client::setNickname(std::string nickname) {this->_nickname = nickname;}
 
-void Client::setChannel(Channel newChannel) {this->_currentChannel = newChannel;}
+void Client::setChannel(Channel *newChannel) {this->_currentChannel = newChannel;}
 
 void Client::logIn(void)
 {
