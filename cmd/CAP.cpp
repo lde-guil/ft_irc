@@ -2,9 +2,13 @@
 
 void Command::cap(void)
 {
+    std::string nick = this->_target->getNickname().empty() ? "*" : this->_target->getNickname();
+
     if (this->_args.size() < 2)
     {
-        throw Command::IncorrectArgNumber();
+        std::string message = IRC::Reply::needmoreparams(nick, "CAP");
+        send(this->_target->getFd(), message.c_str(), message.length(), 0);
+        return;
     }
     std::string subcmd = this->_args[1];
     if (subcmd == "LS")
@@ -13,7 +17,7 @@ void Command::cap(void)
     }
     else if (subcmd == "END")
     {
-        return ;
+        return;
     }
     else if (subcmd == "REQ")
     {

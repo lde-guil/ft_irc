@@ -2,6 +2,7 @@
 #define COMMAND_HPP
 
 #include "Server.hpp"
+#include "Replies.hpp"
 
 class Command
 {
@@ -68,7 +69,19 @@ class Command
             virtual const char *what() const throw();
     };
 
+    class ErroneusNickname: public std::exception
+    {
+        public:
+            virtual const char *what() const throw();
+    };
+
     class NicknameSet: public std::exception
+    {
+        public:
+            virtual const char *what() const throw();
+    };
+
+    class NicknameInUse: public std::exception
     {
         public:
             virtual const char *what() const throw();

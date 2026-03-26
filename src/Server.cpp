@@ -223,16 +223,87 @@ void Server::newClientData(int fd)
 
             if (isUpperCmd(line))
             {
-                Command cmd = create_cmd(line, client, this);
+                std::vector<std::string> tokens = ft_split_irc(line);
+                std::string cmdName = !tokens.empty() ? tokens[0] : "";
+                std::string nick = client->getNickname().empty() ? "*" : client->getNickname();
+
                 try
                 {
+                    Command cmd = create_cmd(line, client, this);
                     cmd.execCmd();
                 }
-                catch(const std::exception& e)
+                catch (const Command::IncorrectArgNumber &e)
                 {
-                    send(fd, "Error: ", sizeof("Error: "), 0);
-                    send(fd, e.what(), strlen(e.what()), 0);
-                    send(fd, "\n", 1, 0);
+                    std::string message;
+                    if (cmdName == "NICK")
+                        message = IRC::Reply::nonicknamegiven(nick);
+                    else
+                        message = IRC::Reply::needmoreparams(nick, cmdName);
+                    send(fd, message.c_str(), message.length(), 0);
+                }
+                catch (const Command::EmptyArg &e)
+                {
+                    std::string message;
+                    if (cmdName == "NICK")
+                        message = IRC::Reply::nonicknamegiven(nick);
+                    else
+                        message = IRC::Reply::needmoreparams(nick, cmdName);
+                    send(fd, message.c_str(), message.length(), 0);
+                }
+                catch (const Command::UserNotLogged &e)
+                {
+                    std::string message = IRC::Reply::notregistered(nick);
+                    send(fd, message.c_str(), message.length(), 0);
+                }
+                catch (const Command::UserAlreadyLogged &e)
+                {
+                    std::string message = IRC::Reply::alreadyregistered(nick);
+                    send(fd, message.c_str(), message.length(), 0);
+                }
+                catch (const Command::UsernameNotSet &e)
+                {
+                    std::string message = IRC::Reply::needmoreparams(nick, cmdName);
+                    send(fd, message.c_str(), message.length(), 0);
+                }
+                catch (const Command::UsernameSet &e)
+                {
+                    std::string message = IRC::Reply::alreadyregistered(nick);
+                    send(fd, message.c_str(), message.length(), 0);
+                }
+                catch (const Command::NicknameSet &e)
+                {
+                    std::string message = IRC::Reply::alreadyregistered(nick);
+                    send(fd, message.c_str(), message.length(), 0);
+                }
+                catch (const Command::ErroneusNickname &e)
+                {
+                    std::string message = IRC::Reply::erroneusnickname(nick);
+                    send(fd, message.c_str(), message.length(), 0);
+                }
+                catch (const Command::NicknameInUse &e)
+                {
+                    std::string message = IRC::Reply::nicknameinuse(nick);
+                    send(fd, message.c_str(), message.length(), 0);
+                }
+                catch (const Command::IncorrectPassword &e)
+                {
+                    std::string message = IRC::Reply::passwdmismatch(nick);
+                    send(fd, message.c_str(), message.length(), 0);
+                }
+                catch (const Command::InvalidChannel &e)
+                {
+                    std::string message = IRC::Reply::nosuchchannel(nick, "");
+                    send(fd, message.c_str(), message.length(), 0);
+                }
+                catch (const Command::UnknownCmd &e)
+                {
+                    std::string message = ":localhost 421 " + nick + " " + cmdName + " :Unknown command\r\n";
+                    send(fd, message.c_str(), message.length(), 0);
+                }
+                catch (const std::exception &e)
+                {
+                    std::string message = std::string(":localhost 400 ") + nick + " :" + e.what() + "\r\n";
+                    send(fd, message.c_str(), message.length(), 0);
                 }
             }
             else if (client->getWrite())

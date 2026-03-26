@@ -2,13 +2,19 @@
 
 void Command::part()
 {
+    std::string nick = this->_target->getNickname().empty() ? "*" : this->_target->getNickname();
+
     if (this->_args.size() != 2)
     {
-        throw Command::IncorrectArgNumber();
+        std::string message = IRC::Reply::needmoreparams(nick, "PART");
+        send(this->_target->getFd(), message.c_str(), message.length(), 0);
+        return;
     }
     if (this->_args[1].empty())
     {
-        throw Command::EmptyArg();
+        std::string message = IRC::Reply::needmoreparams(nick, "PART");
+        send(this->_target->getFd(), message.c_str(), message.length(), 0);
+        return;
     }
     std::string channelName = this->_args[1];
     std::vector<Channel> *channels = _serv->getChannels();
@@ -20,7 +26,9 @@ void Command::part()
     }
     if (it == channels->end())
     {
-        throw (Command::InvalidChannel());
+        std::string message = IRC::Reply::nosuchchannel(nick, channelName);
+        send(this->_target->getFd(), message.c_str(), message.length(), 0);
+        return;
     }
     it->removeMember(_target);
     _target->setChannel(NULL);

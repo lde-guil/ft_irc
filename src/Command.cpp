@@ -88,6 +88,16 @@ const char *Command::NicknameSet::what(void) const throw()
     return ("Nickname Already Set");
 };
 
+const char *Command::ErroneusNickname::what(void) const throw()
+{
+    return ("Erroneus nickname");
+};
+
+const char *Command::NicknameInUse::what(void) const throw()
+{
+    return ("Nickname is already in use");
+};
+
 const char *Command::IncorrectPassword::what(void) const throw()
 {
     return ("Incorrect Password");

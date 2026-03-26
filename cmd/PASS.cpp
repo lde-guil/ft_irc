@@ -2,17 +2,25 @@
 
 void Command::pass(void)
 {
+    std::string nick = this->_target->getNickname().empty() ? "*" : this->_target->getNickname();
+
     if (this->_args.size() != 2)
     {
-        throw Command::IncorrectArgNumber();
+        std::string message = IRC::Reply::needmoreparams(nick, "PASS");
+        send(this->_target->getFd(), message.c_str(), message.length(), 0);
+        return;
     }
     if (this->_args[1].empty())
     {
-        throw Command::EmptyArg();
+        std::string message = IRC::Reply::needmoreparams(nick, "PASS");
+        send(this->_target->getFd(), message.c_str(), message.length(), 0);
+        return;
     }
     if (this->_target->getLogin())
     {
-        throw Command::UserAlreadyLogged();
+        std::string message = IRC::Reply::alreadyregistered(nick);
+        send(this->_target->getFd(), message.c_str(), message.length(), 0);
+        return;
     }
     if (this->_args[1] == *this->_serv->getPword())
     {
@@ -20,6 +28,7 @@ void Command::pass(void)
     }
     else
     {
-        throw Command::IncorrectPassword();
+        std::string message = IRC::Reply::passwdmismatch(nick);
+        send(this->_target->getFd(), message.c_str(), message.length(), 0);
     }
 }

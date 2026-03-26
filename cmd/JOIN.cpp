@@ -10,11 +10,13 @@ void Command::join()
 {
     if (this->_args.size() != 2)
     {
-        throw Command::IncorrectArgNumber();
+        send(this->_target->getFd(), IRC::Reply::nosuchchannel(this->_target->getNickname(), "").c_str(), IRC::Reply::nosuchchannel(this->_target->getNickname(), "").length(), 0);
+        return;
     }
     if (this->_args[1].empty())
     {
-        throw Command::EmptyArg();
+        send(this->_target->getFd(), IRC::Reply::nosuchchannel(this->_target->getNickname(), "").c_str(), IRC::Reply::nosuchchannel(this->_target->getNickname(), "").length(), 0);
+        return;
     }
     std::string channelName = this->_args[1];
     std::vector<Channel> *channels = _serv->getChannels();

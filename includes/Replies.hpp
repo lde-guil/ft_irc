@@ -30,7 +30,6 @@ namespace IRC
     const int RPL_MOTD = 372;
     const int RPL_ENDOFMOTD = 376;
 
-    // Error Codes
     const int ERR_NOSUCHNICK = 401;
     const int ERR_NOSUCHCHANNEL = 403;
     const int ERR_CANNOTSENDTOCHAN = 404;
@@ -87,6 +86,10 @@ namespace IRC
 
             static std::string topicwhotime(const std::string &nick, const std::string &channel, const std::string &who, const std::string &time) {return ":localhost 333 " + nick + " " + channel + " " + who + " " + time + "\r\n";}
 
+            static std::string nonicknamegiven(const std::string &nick) {return ":localhost 431 " + nick + " :No nickname given\r\n";}
+
+            static std::string erroneusnickname(const std::string &nick) {return ":localhost 432 " + nick + " :Erroneous nickname\r\n";}
+
             static std::string nicknameinuse(const std::string &nick) {return ":localhost 433 * " + nick + " :Nickname is already in use\r\n";}
 
             static std::string nosuchnick(const std::string &nick, const std::string &target) {return ":localhost 401 " + nick + " " + target + " :No such nick/channel\r\n";}
@@ -103,8 +106,12 @@ namespace IRC
 
             static std::string unknownmode(const std::string &nick, const std::string &mode) {return ":localhost 472 " + nick + " " + mode + " :is unknown mode char to me\r\n";}
 
-            static std::string inviteonlychan(const std::string &nick, const std::string &channel) {return ":localhost 473 " + nick + " " + channel + " :Cannot join channel (+i)\r\n";}
+            static std::string notregistered(const std::string &nick) {return ":localhost 451 " + nick + " :You have not registered\r\n";}
 
+            static std::string passwdmismatch(const std::string &nick) {return ":localhost 464 " + nick + " :Password incorrect\r\n";}
+
+            static std::string inviteonlychan(const std::string &nick, const std::string &channel) {return ":localhost 473 " + nick + " " + channel + " :Cannot join channel (+i)\r\n";}
+            
             static std::string bannedfromchan(const std::string &nick, const std::string &channel) {return ":localhost 474 " + nick + " " + channel + " :Cannot join channel (+b)\r\n";}
 
             static std::string badchannelkey(const std::string &nick, const std::string &channel) {return ":localhost 475 " + nick + " " + channel + " :Cannot join channel (+k)\r\n";}
