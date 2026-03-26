@@ -26,6 +26,29 @@ int Command::isAvailableNickname(const std::string &nick)
     return 1;
 }
 
+Channel *Command::getChannel(const std::string &name)
+{
+    std::vector<Channel> *list = this->getServ()->getChannels();
+    for (std::vector<Channel>::iterator it = list->begin(); it != list->end(); ++it)
+    {
+        std::cout << "chan name: " << it->getName() << " | " << name << std::endl; 
+        if (it->getName() == name)
+            return &(*it);
+    }
+    return NULL;
+}
+
+Client *Command::getNClient(const std::string &name)
+{
+    std::vector<Client> *list = this->getServ()->getList();
+    for (std::vector<Client>::iterator it = list->begin(); it != list->end(); ++it)
+    {
+        if (it->getNickname() == name)
+            return &(*it);
+    }
+    return NULL;
+}
+
 void Command::execCmd(void)
 {
     if (!this->_name.compare("PASS"))
@@ -51,6 +74,10 @@ void Command::execCmd(void)
     else if (!this->_name.compare("CAP"))
     {
         this->cap();
+    }
+    else if (!this->_name.compare("KICK"))
+    {
+        this->kick();
     }
     else
     {

@@ -21,6 +21,8 @@ class Command
         void execCmd(void);
         int isAvailableNickname(const std::string &nick);
         Server *getServ() {return this->_serv;}
+        Channel *getChannel(const std::string &name);
+        Client *getNClient(const std::string &nickname);
 
         void pass(void);
         void user(void);
