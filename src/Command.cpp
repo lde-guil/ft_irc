@@ -7,7 +7,7 @@ Command::Command(std::string name, std::vector<std::string> args, Client *target
 void Command::displayCmd()
 {
     std::cout << "NAME: " << this->_name << std::endl;
-    std::cout << "TARGET: " << this->_target << std::endl;
+    std::cout << "TARGET: " << this->_target->getUsername() << std::endl;
     std::cout << "ARGS: ";
     for (std::vector<std::string>::iterator i=this->_args.begin(); i!=this->_args.end(); i++)
     {

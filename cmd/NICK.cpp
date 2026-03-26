@@ -14,10 +14,6 @@ void Command::nick(void)
     {
         throw Command::UserNotLogged();
     }
-    if (this->_target->getUsername().empty())
-    {
-        throw Command::UsernameNotSet();
-    }
     if (!this->_target->getNickname().empty())
     {
         throw Command::NicknameSet();

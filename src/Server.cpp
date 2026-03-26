@@ -191,59 +191,65 @@ static Command create_cmd(std::string line, Client *target, Server *server)
     return cmd;
 }
 
-static std::string removeNewline(char *buffer)
-{
-    std::string newStr(buffer);
-    size_t last_index = newStr.size() - 1;
-    if (newStr[last_index] == '\n')
-    {
-        newStr.erase(last_index);
-    }
-    return (newStr);
-}
-
 void Server::newClientData(int fd)
 {
-    std::cout << "data received: " << std::endl;
     char buffer[BUFFER_SIZE];
     memset(buffer, 0, sizeof(buffer));
     Client *client = this->getClient(fd);
-    size_t bytes = recv(fd, buffer, sizeof(buffer) - 1, 0);
-    std::string newBuffer = removeNewline(buffer);
-
-    std::cout << "data received: " << newBuffer << std::endl;
+    ssize_t bytes = recv(fd, buffer, sizeof(buffer) - 1, 0);
 
     if (bytes > 0)
     {
-        if (isUpperCmd(newBuffer))
+        client->appendTempBuffer(std::string(buffer, bytes));
+
+        while (true)
         {
-            Command cmd = create_cmd(newBuffer, client, this);
-            try
+            std::string pending = client->getTempBuffer();
+            size_t pos = pending.find('\n');
+            if (pos == std::string::npos)
+                break;
+
+            std::string line = pending.substr(0, pos);
+            pending.erase(0, pos + 1);
+            client->clearTempBuffer();
+            client->appendTempBuffer(pending);
+
+            if (!line.empty() && line[line.size()-1] == '\r')
+                line.erase(line.size()-1);
+            if (line.empty())
+                continue;
+
+            std::cout << "data received line: " << line << std::endl;
+
+            if (isUpperCmd(line))
             {
-                cmd.execCmd();
+                Command cmd = create_cmd(line, client, this);
+                try
+                {
+                    cmd.execCmd();
+                }
+                catch(const std::exception& e)
+                {
+                    send(fd, "Error: ", sizeof("Error: "), 0);
+                    send(fd, e.what(), strlen(e.what()), 0);
+                    send(fd, "\n", 1, 0);
+                }
             }
-            catch(const std::exception& e)
+            else if (client->getWrite())
             {
-                send(fd, "Error: ", sizeof("Error: "), 0);
-                send(fd, e.what(), strlen(e.what()), 0);
-                send(fd, "\n", 1, 0);
-            }
-        }
-        else if (client->getWrite())
-        {
-            buffer[bytes] = '\0';
-            if (client->hasChannel())
-            {
-                client->getChannel().sendMessage(newBuffer, client);
+                if (client->hasChannel())
+                {
+                    client->getChannel().sendMessage(line, client);
+                }
+                else
+                {
+                    send(fd, "You must join a channel first !\n", sizeof("You must join a channel first !\n"), 0);
+                }
             }
             else
             {
-                send(fd, "You must join a channel first !\n", sizeof("You must join a channel first !\n"), 0);
+                send(fd, "You must authenticate first !\n", sizeof("You must authenticate first !\n"), 0);
             }
-        }
-        else
-        {
-            send(fd, "You must authenticate first !\n", sizeof("You must authenticate first !\n"), 0);
         }
     }
     else

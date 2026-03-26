@@ -76,6 +76,12 @@ void Client::setRealname(std::string realname) {this->_realname = realname;}
 
 void Client::setChannel(Channel *newChannel) {this->_currentChannel = newChannel;}
 
+void Client::appendTempBuffer(const std::string &data){ this->_tempBuffer += data; }
+
+std::string Client::getTempBuffer(void){ return this->_tempBuffer; }
+
+void Client::clearTempBuffer(void){ this->_tempBuffer.clear(); }
+
 void Client::logIn(void)
 {
     this->_login = 1;

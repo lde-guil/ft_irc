@@ -25,6 +25,7 @@ class Client
         std::string _servername;
         std::string _realname;
         std::string _nickname;
+        std::string _tempBuffer;
         Channel *_currentChannel;
     
     public:
@@ -52,6 +53,9 @@ class Client
         void setServername(std::string servername);
         void setRealname(std::string realname);
         void setChannel(Channel *newChannel);
+        void appendTempBuffer(const std::string &data);
+        std::string getTempBuffer(void);
+        void clearTempBuffer(void);
         void logIn(void);
         void checkAuth(void);
         bool hasChannel(void);
