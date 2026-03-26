@@ -2,11 +2,11 @@
 
 void Command::user(void)
 {
-    if (this->_args.size() != 2)
+    if (this->_args.size() != 5)
     {
         throw Command::IncorrectArgNumber();
     }
-    if (this->_args[1].empty())
+    if (this->_args[1].empty() || this->_args[2].empty() || this->_args[3].empty() || this->_args[4].empty())
     {
         throw Command::EmptyArg();
     }
@@ -19,5 +19,8 @@ void Command::user(void)
         throw Command::UsernameSet();
     }
     this->_target->setUsername(this->_args[1]);
-    send(this->_target->getFd(), "Your username is set !\n", sizeof("Your username is set !\n"), 0);
+    this->_target->setHostname(this->_args[2]);
+    this->_target->setServername(this->_args[3]);
+    this->_target->setRealname(this->_args[4]);
+    send(this->_target->getFd(), "Your user info is set!\n", sizeof("Your user info is set!\n"), 0);
 }

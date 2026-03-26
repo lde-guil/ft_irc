@@ -150,21 +150,43 @@ void Server::serverInit(int port, std::string password)
 	}
 }
 
-static std::vector<std::string> ft_split(const std::string& str) {
+static std::vector<std::string> ft_split_irc(const std::string& str) {
     std::vector<std::string> tokens;
     std::istringstream iss(str);
     std::string token;
-    
+
     while (iss >> token) {
+        if (!token.empty() && token[0] == ':') {
+            std::string trailing = token.substr(1);
+            std::string rest;
+            std::getline(iss, rest);
+            if (!rest.empty() && rest[0] == ' ')
+                rest.erase(0, 1);
+            trailing += rest;
+            tokens.push_back(trailing);
+            break;
+        }
         tokens.push_back(token);
     }
-    
+
     return tokens;
+}
+
+static bool isUpperCmd(const std::string& line) {
+    std::vector<std::string> tokens = ft_split_irc(line);
+    if (tokens.empty())
+        return false;
+    const std::string& cmd = tokens[0];
+    for (size_t i = 0; i < cmd.size(); i++) {
+        if (!std::isupper(static_cast<unsigned char>(cmd[i])))
+            return false;
+    }
+    return true;
 }
 
 static Command create_cmd(std::string line, Client *target, Server *server)
 {
-    std::vector<std::string> split_line = ft_split(line);
+    std::vector<std::string> split_line = ft_split_irc(line);
     Command cmd(split_line[0], split_line, target, server);
     return cmd;
 }
@@ -182,15 +204,18 @@ static std::string removeNewline(char *buffer)
 
 void Server::newClientData(int fd)
 {
+    std::cout << "data received: " << std::endl;
     char buffer[BUFFER_SIZE];
     memset(buffer, 0, sizeof(buffer));
     Client *client = this->getClient(fd);
     size_t bytes = recv(fd, buffer, sizeof(buffer) - 1, 0);
     std::string newBuffer = removeNewline(buffer);
 
+    std::cout << "data received: " << newBuffer << std::endl;
+
     if (bytes > 0)
     {
-        if (newBuffer[0] == '/')
+        if (isUpperCmd(newBuffer))
         {
             Command cmd = create_cmd(newBuffer, client, this);
             try

@@ -44,6 +44,12 @@ std::string Client::getNickname(void){return (this->_nickname);}
 
 std::string Client::getUsername(void) {return (this->_username);}
 
+std::string Client::getHostname(void) {return (this->_hostname);}
+
+std::string Client::getServername(void) {return (this->_servername);}
+
+std::string Client::getRealname(void) {return (this->_realname);}
+
 int Client::getWrite(void) {return (this->_write);}
 
 Channel Client::getChannel(void) 
@@ -61,6 +67,12 @@ void Client::setIpAddress(std::string ipAddress) {this->_ipAddress = ipAddress;}
 void Client::setUsername(std::string username) {this->_username = username;}
 
 void Client::setNickname(std::string nickname) {this->_nickname = nickname;}
+
+void Client::setHostname(std::string hostname) {this->_hostname = hostname;}
+
+void Client::setServername(std::string servername) {this->_servername = servername;}
+
+void Client::setRealname(std::string realname) {this->_realname = realname;}
 
 void Client::setChannel(Channel *newChannel) {this->_currentChannel = newChannel;}
 

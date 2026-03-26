@@ -18,25 +18,29 @@ void Command::displayCmd()
 
 void Command::execCmd(void)
 {
-    if (!this->_name.compare("/pass"))
+    if (!this->_name.compare("PASS"))
     {
         this->pass();
     }
-    else if (!this->_name.compare("/user"))
+    else if (!this->_name.compare("USER"))
     {
         this->user();
     }
-    else if (!this->_name.compare("/nick"))
+    else if (!this->_name.compare("NICK"))
     {
         this->nick();
     }
-    else if (!this->_name.compare("/join"))
+    else if (!this->_name.compare("JOIN"))
     {
         this->join();
     }
-    else if (!this->_name.compare("/part"))
+    else if (!this->_name.compare("PART"))
     {
         this->part();
+    }
+    else if (!this->_name.compare("CAP"))
+    {
+        this->cap();
     }
     else
     {

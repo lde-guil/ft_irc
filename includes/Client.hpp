@@ -21,6 +21,9 @@ class Client
         int _write;
         std::string _ipAddress;
         std::string _username;
+        std::string _hostname;
+        std::string _servername;
+        std::string _realname;
         std::string _nickname;
         Channel *_currentChannel;
     
@@ -35,6 +38,9 @@ class Client
         int getLogin(void);
         std::string getUsername(void);
         std::string getNickname(void);
+        std::string getHostname(void);
+        std::string getServername(void);
+        std::string getRealname(void);
         int getWrite(void);
         Channel getChannel(void);
 
@@ -42,6 +48,9 @@ class Client
         void setIpAddress(std::string ipAddress);
         void setUsername(std::string username);
         void setNickname(std::string username);
+        void setHostname(std::string hostname);
+        void setServername(std::string servername);
+        void setRealname(std::string realname);
         void setChannel(Channel *newChannel);
         void logIn(void);
         void checkAuth(void);

@@ -24,6 +24,7 @@ class Command
         void nick(void);
         void join(void);
         void part(void);
+        void cap(void);
 
     class UnknownCmd: public std::exception
     {
