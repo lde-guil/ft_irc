@@ -28,6 +28,7 @@ class Command
         void join(void);
         void part(void);
         void cap(void);
+        void kick(void);
 
     class UnknownCmd: public std::exception
     {

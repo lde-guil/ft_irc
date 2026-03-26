@@ -16,6 +16,16 @@ void Command::displayCmd()
     std::cout << std::endl;
 }
 
+int Command::isAvailableNickname(const std::string &nick)
+{
+    std::vector<Client> *list = this->getServ()->getList();
+    for (std::vector<Client>::iterator it = list->begin(); it != list->end(); ++it)
+    {
+        if (it->getNickname() == nick) {return 0;}
+    }
+    return 1;
+}
+
 void Command::execCmd(void)
 {
     if (!this->_name.compare("PASS"))
