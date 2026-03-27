@@ -139,7 +139,14 @@ void Server::serverInit(int port, std::string password)
 			{
 				if (this->_fds[i].fd == this->_socketFd)
 				{
-					this->acceptClient();
+                    try
+                    {
+					    this->acceptClient();
+                    }
+                    catch (const std::runtime_error &e)
+                    {
+                        std::cout << "Error: " << e.what() << std::endl;
+                    }
 				}
 				else
 				{
@@ -238,21 +245,6 @@ void Server::newClientData(int fd)
                     send(fd, message.c_str(), message.length(), 0);
                 }
             }
-        //    else if (client->getWrite())
-        //    {
-        //        if (client->hasChannel())
-        //        {
-        //            client->getChannel().sendMessage(line, client);
-        //        }
-        //        else
-        //        {
-        //            send(fd, "You must join a channel first !\n", sizeof("You must join a channel first !\n"), 0);
-        //        }
-        //    }
-        //    else
-        //    {
-        //        send(fd, "You must authenticate first !\n", sizeof("You must authenticate first !\n"), 0);
-        //    }
         }
     }
     else
@@ -290,7 +282,6 @@ void Server::acceptClient()
     {
         throw(std::runtime_error("Could not set O_NONBLOCK option on server acceptation request"));
     }
-    send(requestFd, "Welcome to IRC !\n", sizeof("Welcome to IRC !\n") - 1, 0);
     newPoll.fd = requestFd;
     newPoll.events = POLLIN;
     newPoll.revents = 0;

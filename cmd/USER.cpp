@@ -1,4 +1,5 @@
 #include "../includes/Command.hpp"
+#include <netdb.h>
 
 void Command::user(void)
 {
@@ -32,5 +33,6 @@ void Command::user(void)
     this->_target->setHostname(this->_args[2]);
     this->_target->setServername(this->_args[3]);
     this->_target->setRealname(this->_args[4]);
+    std::cout << "user: " << this->_target->getUsername() << ", host: " << this->_target->getHostname() << ", server: " << this->_target->getServername() << ", real: " << this->_target->getRealname() << std::endl; 
     this->_target->checkAuth();
 }

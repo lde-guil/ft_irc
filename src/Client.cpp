@@ -51,6 +51,14 @@ std::string Client::getServername(void) {return (this->_servername);}
 
 std::string Client::getRealname(void) {return (this->_realname);}
 
+std::string Client::getPrefix()
+{
+    std::string username = _username.empty() ? "" : "!" + _username;
+    std::string hostname = _hostname.empty() ? "" : "@" + _hostname;
+
+    return _nickname + username + hostname;
+}
+
 int Client::getWrite(void) {return (this->_write);}
 
 Channel Client::getChannel(void) 

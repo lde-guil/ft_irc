@@ -16,6 +16,7 @@
 #include <cstdlib>
 #include <cstdio>
 #include <algorithm>
+#include <netdb.h>
 #include "Client.hpp"
 #include "Channel.hpp"
 

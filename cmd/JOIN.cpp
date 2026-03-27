@@ -8,14 +8,9 @@ static bool compareChannels(const Channel &c, const std::string &name)
 
 void Command::join()
 {
-    if (this->_args.size() != 2)
+    if (this->_args.size() != 2 || this->_args[1].empty())
     {
-        send(this->_target->getFd(), Reply::needmoreparams(this->_target->getNickname(), this->_name).c_str(), Reply::nosuchchannel(this->_target->getNickname(), this->_name).length(), 0);
-        return;
-    }
-    if (this->_args[1].empty())
-    {
-        send(this->_target->getFd(), Reply::nosuchchannel(this->_target->getNickname(), "").c_str(), Reply::nosuchchannel(this->_target->getNickname(), "").length(), 0);
+        send(this->_target->getFd(), Reply::needmoreparams(this->_target->getNickname(), this->_name).c_str(), Reply::needmoreparams(this->_target->getNickname(), this->_name).length(), 0);
         return;
     }
     std::string channelName = this->_args[1];
@@ -32,6 +27,7 @@ void Command::join()
         {
             it->addMember(_target);
             this->_target->setChannel(&(*it));
+            it->sendMessage(Reply::join(_target->getNickname(), it->getName()), this->_target);
         }
         else
         {
@@ -44,5 +40,6 @@ void Command::join()
         newChannel.addOperator(_target);
         channels->push_back(newChannel);
         this->_target->setChannel(&channels->back());
+        newChannel.sendMessage(Reply::join(_target->getNickname(), newChannel.getName()), this->_target);
     }
 }

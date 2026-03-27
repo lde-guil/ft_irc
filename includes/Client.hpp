@@ -42,6 +42,7 @@ class Client
         std::string getHostname(void);
         std::string getServername(void);
         std::string getRealname(void);
+        std::string getPrefix(void);
         int getWrite(void);
         Channel getChannel(void);
 
