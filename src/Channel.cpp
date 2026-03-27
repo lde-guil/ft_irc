@@ -79,12 +79,6 @@ void Channel::sendMessage(std::string mess, Client *author)
     }
     for (std::set<Client*>::iterator it = list.begin(); it != list.end(); ++it)
     {
-        send((*it)->getFd(), "<#", 2, 0);
-        send((*it)->getFd(), this->getName().c_str(), this->getName().length(), 0);
-        send((*it)->getFd(), " @", 2, 0);
-        send((*it)->getFd(), author->getUsername().c_str(), author->getUsername().length(), 0);
-        send((*it)->getFd(), ">: ", 3, 0);
         send((*it)->getFd(), mess.c_str(), mess.length(), 0);
-        send((*it)->getFd(), "\n", 1, 0);
     }
 }
