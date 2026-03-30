@@ -1,45 +1,45 @@
 #include "../includes/Command.hpp"
-#include <algorithm>
-
-static bool compareChannels(const Channel &c, const std::string &name)
-{
-    return c.getName() == name;
-}
 
 void Command::join()
 {
-    if (this->_args.size() != 2 || this->_args[1].empty())
-    {
-        send(this->_target->getFd(), Reply::needmoreparams(this->_target->getNickname(), this->_name).c_str(), Reply::needmoreparams(this->_target->getNickname(), this->_name).length(), 0);
+    if (_args.empty()) {
+        std::string reply = Reply::needmoreparams(_target->getNickname(), "JOIN");
+        send(_target->getFd(), reply.c_str(), reply.length(), 0);
         return;
     }
-    std::string channelName = this->_args[1];
-    std::vector<Channel> *channels = _serv->getChannels();
-    std::vector<Channel>::iterator it = channels->begin();
-    for (; it != channels->end(); ++it)
-    {
-        if (compareChannels(*it, channelName))
-            break;
+    std::string channelName = _args[1];
+    if (channelName.empty() || channelName[0] != '#') {
+        std::string reply = Reply::nosuchchannel(_target->getNickname(), channelName);
+        send(_target->getFd(), reply.c_str(), reply.length(), 0);
+        return;
     }
-    if (it != channels->end())
-    {
-        if (!it->isInviteOnly())
-        {
-            it->addMember(_target);
-            this->_target->setChannel(&(*it));
-            it->sendMessage(Reply::join(_target->getNickname(), it->getName()), this->_target);
-        }
-        else
-        {
-            send(this->_target->getFd(), Reply::inviteonlychan(this->_target->getNickname(), it->getName()).c_str(), Reply::inviteonlychan(this->_target->getNickname(), it->getName()).length(), 0);
-        }
+    Channel *chan = getChannel(channelName);
+    if (!chan) {
+        Channel newChan(channelName);
+        _serv->getChannels()->push_back(newChan);
+        chan = &(_serv->getChannels()->back());
     }
-    else
-    {
-        Channel newChannel(channelName);
-        newChannel.addOperator(_target);
-        channels->push_back(newChannel);
-        this->_target->setChannel(&channels->back());
-        newChannel.sendMessage(Reply::join(_target->getNickname(), newChannel.getName()), this->_target);
+    if (chan->isInviteOnly()) {
+        std::string reply = Reply::inviteonlychan(_target->getNickname(), channelName);
+        send(_target->getFd(), reply.c_str(), reply.length(), 0);
+        return;
     }
+    if (chan->isMember(_target)) {
+        return;
+    }
+    if (chan->getClientCount() == 0) {
+        chan->addOperator(_target);
+    } else {
+        chan->addMember(_target);
+    }
+
+    std::string joinMsg = Reply::join(_target->getPrefix(), channelName);
+    chan->sendMessage(joinMsg, _target);
+
+    std::string users = chan->getUsers();
+    std::string namreply = Reply::namreply(_target->getPrefix(), channelName, users);
+    send(_target->getFd(), namreply.c_str(), namreply.length(), 0);
+
+    std::string endofnames = Reply::endofnames(_target->getPrefix(), channelName);
+    send(_target->getFd(), endofnames.c_str(), endofnames.length(), 0);
 }

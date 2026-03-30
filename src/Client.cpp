@@ -53,10 +53,7 @@ std::string Client::getRealname(void) {return (this->_realname);}
 
 std::string Client::getPrefix()
 {
-    std::string username = _username.empty() ? "" : "!" + _username;
-    std::string hostname = _hostname.empty() ? "" : "@" + _hostname;
-
-    return _nickname + username + hostname;
+    return _nickname + "!" + _username + "@localhost";
 }
 
 int Client::getWrite(void) {return (this->_write);}

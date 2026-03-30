@@ -36,6 +36,7 @@ class Channel
         int isMember(Client* client) const;
         void setTopic(const std::string newTopic);
         void sendMessage(std::string mess, Client *author);
+        std::string getUsers(void);
 };
 
 #endif

@@ -37,72 +37,7 @@ class Command
         public:
             virtual const char *what() const throw();
     };
-
-    class IncorrectArgNumber: public std::exception
-    {
-        public:
-            virtual const char *what() const throw();
-    };
-
-    class EmptyArg: public std::exception
-    {
-        public:
-            virtual const char *what() const throw();
-    };
-
-    class UserNotLogged: public std::exception
-    {
-        public:
-            virtual const char *what() const throw();
-    };
-
-    class UserAlreadyLogged: public std::exception
-    {
-        public:
-            virtual const char *what() const throw();
-    };
-
-    class UsernameNotSet: public std::exception
-    {
-        public:
-            virtual const char *what() const throw();
-    };
-
-    class UsernameSet: public std::exception
-    {
-        public:
-            virtual const char *what() const throw();
-    };
-
-    class ErroneusNickname: public std::exception
-    {
-        public:
-            virtual const char *what() const throw();
-    };
-
-    class NicknameSet: public std::exception
-    {
-        public:
-            virtual const char *what() const throw();
-    };
-
-    class NicknameInUse: public std::exception
-    {
-        public:
-            virtual const char *what() const throw();
-    };
-
-    class IncorrectPassword: public std::exception
-    {
-        public:
-            virtual const char *what() const throw();
-    };
-
-    class InvalidChannel: public std::exception
-    {
-        public:
-            virtual const char *what() const throw();
-    };
+    
 };
 
 #endif

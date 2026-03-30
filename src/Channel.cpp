@@ -62,6 +62,11 @@ int Channel::isMember(Client *client) const
     {
         return (1);
     }
+    i = std::find(_ops.begin(), _ops.end(), client);
+    if (i != this->_ops.end())
+    {
+        return (1);
+    }
     return (0);
 }
 
@@ -81,4 +86,24 @@ void Channel::sendMessage(std::string mess, Client *author)
     {
         send((*it)->getFd(), mess.c_str(), mess.length(), 0);
     }
+}
+
+std::string Channel::getUsers(void)
+{
+    std::string res = "";
+    for (std::vector<Client *>::iterator it = _ops.begin(); it != _ops.end(); ++it)
+    {
+        if (!(*it)->getNickname().empty())
+        {
+            res += "@" + (*it)->getNickname() + " ";
+        }
+    }
+    for (std::vector<Client *>::iterator it = _connectedClients.begin(); it != _connectedClients.end(); ++it)
+    {
+        if (!(*it)->getNickname().empty())
+        {
+            res += (*it)->getNickname() + " ";
+        }
+    }
+    return (res);
 }

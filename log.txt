@@ -40,3 +40,7 @@
     ok bizarre
 }
 
+{
+    sent message: louis!lde-guil@localhost
+}
+
