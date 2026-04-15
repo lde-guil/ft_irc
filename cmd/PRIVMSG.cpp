@@ -9,7 +9,12 @@ void Command::privmsg(void)
         return;
     }
     std::string target = _args[1];
-    std::string message = _args[2];
+    std::string message;
+    for (size_t i = 2; i < _args.size(); ++i)
+    {
+        if (i > 2) message += " ";
+        message += _args[i];
+    }
     if (target.empty())
     {
         std::string reply = Reply::needmoreparams(_target->getNickname(), "PRIVMSG");
@@ -25,6 +30,7 @@ void Command::privmsg(void)
     if (message[0] == ':')
         message = message.substr(1);
     std::string fullMsg = Reply::privmsg(_target->getPrefix(), target, message);
+    std::cout << "full message sent: " << fullMsg << std::endl;
     if (target[0] == '#')
     {
         Channel *chan = getChannel(target);

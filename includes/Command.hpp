@@ -35,6 +35,7 @@ class Command
         void invite(void);
         void mode(void);
         void topic(void);
+        void ping(void);
         void quit(void);
 
     class UnknownCmd: public std::exception
@@ -42,7 +43,8 @@ class Command
         public:
             virtual const char *what() const throw();
     };
-
 };
+
+bool isCtcpMessage(const std::string &message);
 
 #endif

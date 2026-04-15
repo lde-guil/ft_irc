@@ -35,6 +35,13 @@ void Command::mode(void)
             return;
         }
 
+        if (!chan->isOperator(_target))
+        {
+            std::string reply = Reply::chanoprivsneeded(_target->getNickname(), target);
+            send(_target->getFd(), reply.c_str(), reply.length(), 0);
+            return;
+        }
+
         bool plus = (modes[0] == '+');
         for (size_t i = 1; i < modes.size(); i++)
         {

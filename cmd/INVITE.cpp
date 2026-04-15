@@ -18,20 +18,23 @@ void Command::invite(void)
         return;
     }
     Channel *chan = getChannel(channelName);
-    if (chan)
+    if (!chan)
     {
-        if (!chan->isMember(_target))
-        {
-            std::string reply = Reply::notonchannel(_target->getNickname(), channelName);
-            send(_target->getFd(), reply.c_str(), reply.length(), 0);
-            return;
-        }
-        if (chan->isInviteOnly() && !chan->isOperator(_target))
-        {
-            std::string reply = Reply::chanoprivsneeded(_target->getNickname(), channelName);
-            send(_target->getFd(), reply.c_str(), reply.length(), 0);
-            return;
-        }
+        std::string reply = Reply::nosuchchannel(_target->getNickname(), channelName);
+        send(_target->getFd(), reply.c_str(), reply.length(), 0);
+        return;
+    }
+    if (!chan->isMember(_target))
+    {
+        std::string reply = Reply::notonchannel(_target->getNickname(), channelName);
+        send(_target->getFd(), reply.c_str(), reply.length(), 0);
+        return;
+    }
+    if (!chan->isOperator(_target))
+    {
+        std::string reply = Reply::chanoprivsneeded(_target->getNickname(), channelName);
+        send(_target->getFd(), reply.c_str(), reply.length(), 0);
+        return;
     }
     std::string inviteMsg = ":" + _target->getPrefix() + " INVITE " + inviteeNick + " " + channelName + "\r\n";
     send(_target->getFd(), inviteMsg.c_str(), inviteMsg.length(), 0);

@@ -39,7 +39,7 @@ class Reply
         //Command replies
         static std::string join(const std::string &prefix, const std::string &channel) {return ":" + prefix + " JOIN " + channel + "\r\n";}
         static std::string part(const std::string &prefix, const std::string &channel) {return ":" + prefix + " PART " + channel + "\r\n";}
-        static std::string ping(const std::string &nick, const std::string &token) {return ":" + nick + " PONG:" + token + "\r\n";}
+        static std::string ping(const std::string &server, const std::string &token) {return ":" + server + " PONG " + token + "\r\n";}
         static std::string privmsg(const std::string &nick, const std::string &channel, const std::string &message) {return ":" + nick + " PRIVMSG " + channel + " :" + message + "\r\n";}
         static std::string quit(const std::string &nick, const std::string &message) {return ":" + nick + " QUIT :Quit: " + message + "\r\n";}
         static std::string kick(const std::string &nick, const std::string &channel, const std::string &target, const std::string &reason) {return ":" + nick + " KICK " + channel + " " + target + " :" + reason + "\r\n";}

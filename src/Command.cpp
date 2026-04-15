@@ -48,6 +48,11 @@ Client *Command::getNClient(const std::string &name)
     return NULL;
 }
 
+bool isCtcpMessage(const std::string &message)
+{
+    return (message.size() >= 2 && message[0] == '\001' && message[message.size() - 1] == '\001');
+}
+
 void Command::execCmd(void)
 {
     if (!this->_name.compare("PASS"))
@@ -93,6 +98,10 @@ void Command::execCmd(void)
     else if (!this->_name.compare("TOPIC"))
     {
         this->topic();
+    }
+    else if (!this->_name.compare("PING"))
+    {
+        this->ping();
     }
     else if (!this->_name.compare("QUIT"))
     {

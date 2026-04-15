@@ -3,9 +3,10 @@ CC = c++
 CFLAGS = -Wall -Wextra -Werror -std=c++98 -g
 SRC_DIR = src
 CMD_DIR = cmd
+BONUS_DIR = bonus
 OBJ_DIR = obj
 
-SRC = $(wildcard $(SRC_DIR)/*.cpp) $(wildcard $(CMD_DIR)/*.cpp)
+SRC = $(wildcard $(SRC_DIR)/*.cpp) $(wildcard $(CMD_DIR)/*.cpp) $(wildcard $(BONUS_DIR)/*.cpp)
 OBJ = $(SRC:%.cpp=$(OBJ_DIR)/%.o)
 
 all: $(NAME)
