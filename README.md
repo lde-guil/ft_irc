@@ -69,7 +69,7 @@ Then send IRC commands in order, e.g. `PASS`, `NICK`, `USER`, followed by channe
 /connect localhost 4444 <password>
 ```
 
-Use the same port and password as when starting `ircserv`. (Note: if you are using localhost anr running multiple instances of irssi to test the project, make sure to set different nicknames for each instances, otherwise the server won't let you connect properly)
+Use the same port and password as when starting `ircserv`. (Note: if you are using localhost and running multiple instances of irssi to test the project, make sure to set different nicknames for each instance, otherwise the server won't let you connect properly)
 
 ### Supported commands (summary)
 
@@ -77,7 +77,7 @@ Use the same port and password as when starting `ircserv`. (Note: if you are usi
 
 ## Additional features
 
-This project also handles file transfer and a moderation bot to better ressemble a classic IRC server>
+This project also handles file transfer and a moderation bot to better resemble a classic IRC server.
 
 ### File transfer
 
@@ -85,7 +85,7 @@ File transfer can be realised on the **Irssi client** using the `DCC` command. T
 
 ### Moderation bot
 
-A moderation bot is initialized when running the program. It will scan every message sent using `PRIVMSG` and will send a warning everytime a client uses inappropriate words. At the third warning, the bot will kick said user off the channel.
+A moderation bot is initialized when running the program. It will scan every message sent using `PRIVMSG` and will send a warning every time a client uses inappropriate words. At the third warning, the bot will kick the user off the channel.
 
 ## Technical choices (brief)
 
