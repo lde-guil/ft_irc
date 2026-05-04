@@ -16,6 +16,7 @@ class Channel
         std::string _key;
         int _inviteOnly;
         int _secured;
+        int _userLimit;
         int _connectedCount;
 
     public:
@@ -32,9 +33,13 @@ class Channel
         int isOperator(Client* client) const;
         void setInviteOnly(int value);
         void setRestricted(int value);
+        void setKey(const std::string &key);
+        void setUserLimit(int limit);
+        int getUserLimit() const;
         
         void addMember(Client* client);
         void addOperator(Client* client);
+        void removeOperator(Client* client);
         void removeMember(Client* client);
         int isMember(Client* client) const;
         void setTopic(const std::string newTopic);

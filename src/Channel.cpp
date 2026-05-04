@@ -4,9 +4,9 @@
 #include <iostream>
 #include <set>
 
-Channel::Channel(): _name(""), _topic(""), _inviteOnly(0), _secured(0), _connectedCount(0) {}
+Channel::Channel(): _name(""), _topic(""), _inviteOnly(0), _secured(0), _userLimit(0), _connectedCount(0) {}
 
-Channel::Channel(const std::string &name): _name(name), _topic(""), _inviteOnly(0) , _secured(0), _connectedCount(0){}
+Channel::Channel(const std::string &name): _name(name), _topic(""), _inviteOnly(0) , _secured(0), _userLimit(0), _connectedCount(0){}
 
 Channel::~Channel() {}
 
@@ -109,6 +109,29 @@ int Channel::isOperator(Client *client) const
 void Channel::setInviteOnly(int value) { this->_inviteOnly = value; }
 
 void Channel::setRestricted(int value) { this->_secured = value; }
+
+void Channel::setKey(const std::string &key) { this->_key = key; }
+
+void Channel::setUserLimit(int limit) { this->_userLimit = limit; }
+
+int Channel::getUserLimit() const { return this->_userLimit; }
+
+void Channel::removeOperator(Client *client)
+{
+    if (client == NULL)
+        return;
+    
+    std::string nickname = client->getNickname();
+    
+    for (std::vector<Client *>::iterator i = this->_ops.begin(); i != this->_ops.end(); ++i)
+    {
+        if (*i != NULL && (*i)->getNickname() == nickname)
+        {
+            this->_ops.erase(i);
+            break;
+        }
+    }
+}
 
 void Channel::broadcast(std::string mess, Client *author)
 {
